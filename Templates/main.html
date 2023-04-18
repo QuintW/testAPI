@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--<link rel="stylesheet" href="../static/main.css">
+    <script src="../static/main.js"></script> -->
+</head>
+<body>
+    <h2>Test</h2>
+    <form id="prompt-form">
+        <label for="prompt">Prompt:</label>
+        <input type="text" id="prompt" name="prompt" placeholder="Enter a prompt..."><br>
+
+        <label for="negative-prompt">Negative Prompt:</label>
+        <input type="text" id="negative-prompt" name="negative_prompt"><br>
+
+        <label for="steps">Steps:</label>
+        <input type="number" id="steps" name="steps" value="10"><br>
+
+        <label for="num-samples">Number of Samples:</label>
+        <input type="number" id="num-samples" name="num_samples" value="1"><br>
+
+        <label for="scale">Scale:</label>
+        <input type="number" id="scale" name="scale" value="1"><br>
+
+        <label for="seed">Seed:</label>
+        <input type="number" id="seed" name="seed" value="42"><br>
+
+        <label for="strength">Strength:</label>
+        <input type="number" id="strength" name="strength" value="1"><br>
+
+        <label for="input-image">Input Image:</label>
+        <input type="file" id="input-image" name="input_image"><br>
+
+        <label for="depth-image">Depth Image:</label>
+        <input type="file" id="depth-image" name="depth_image"><br>
+
+        <button type="submit" id="submit-button-A">Create Prompt A</button>
+        <button type="submit" id="submit-button-B">Create Prompt B </button>
+        <button type="submit" id="submit-button-C">Create Prompt C</button>
+    </form>
+
+    <script>
+        const form = document.querySelector('#prompt-form');
+        const submitButtonA = document.querySelector('#submit-button-A');
+        const submitButtonB = document.querySelector('#submit-button-B');
+        const submitButtonC = document.querySelector('#submit-button-C');
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            for (let [key, value] of formData.entries()) {
+                console.log(`${key}: ${value}`);
+            }
+        });
+
+        submitButtonA.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const options = {
+                method: 'POST',
+                body: formData,
+            };
+
+            submitButtonA.disabled = true;
+            const response = await fetch('/get-promptA', options);
+            submitButtonA.disabled = false;
+
+            const result = await response.json();
+            console.log(result);
+        });
+
+        submitButtonB.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const options = {
+                method: 'POST',
+                body: formData,
+            };
+
+            submitButtonB.disabled = true;
+            const response = await fetch('/get-promptB', options);
+            submitButtonB.disabled = false;
+
+            const result = await response.json();
+            console.log(result);
+        });
+
+        submitButtonC.addEventListener('click', async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const options = {
+                method: 'POST',
+                body: formData,
+            };
+
+            submitButtonC.disabled = true;
+            const response = await fetch('/get-promptC', options);
+            submitButtonC.disabled = false;
+
+            const result = await response.json();
+            console.log(result);
+        });
+    </script>
+
+        <div id="images">
+            {% if images %}
+            images:
+                {{ images }}
+            {% endif %}
+            {% if result %}
+            result:
+                {{ result }}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

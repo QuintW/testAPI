@@ -1,0 +1,32 @@
+# Test your FastAPI endpoints
+
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/hello/User
+Accept: application/json
+
+###
+
+// POST http://127.0.0.1:8000/users/
+// Accept: application/json
+
+###
+
+
+GET http://127.0.0.1:8000/generate_img/data
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/generate_depth
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/generate_img_to_img
+Accept: application/json
+
+###
