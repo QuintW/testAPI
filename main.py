@@ -1,9 +1,13 @@
 import pprint
+
+import torch
 import uvicorn
 from fastapi import FastAPI, UploadFile, Request, Form, File
 from pydantic import BaseModel
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse
+
+from generate import generate_image
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
@@ -37,7 +41,6 @@ class GenerateImgToImgJSON(BaseModel):
 
 @app.post("/users")
 async def get_user(user: int = Form(...)):
-    pprint.pprint(user)
     # create user in database or perform other logic
     return {"message": "User created", "user": "test"}
 
@@ -53,10 +56,8 @@ class PromptRequest(BaseModel):
 
 
 @app.post("/get-promptA")
-async def get_promptA(request: Request):
-    pprint.pprint(vars(request))
+async def create_img(request: Request):
     form_data = await request.form()
-    pprint.pprint(form_data)
     prompt = form_data.get('prompt')
     negative_prompt = form_data.get('negative_prompt')
     steps = form_data.get('steps')
@@ -64,39 +65,18 @@ async def get_promptA(request: Request):
     scale = form_data.get('scale')
     seed = form_data.get('seed')
     strength = form_data.get('strength')
-    input_image = form_data.get('input_image')
-    depth_image = form_data.get('depth_image')
-    pprint.pprint(prompt)
-    pprint.pprint(negative_prompt)
-    pprint.pprint(steps)
-    pprint.pprint(num_samples)
-    pprint.pprint(scale)
-    pprint.pprint(seed)
-    pprint.pprint(strength)
-    pprint.pprint(input_image)
-    pprint.pprint(depth_image)
+
+    # Generate the image
+    image = generate_image(prompt, negative_prompt, steps, num_samples, scale, seed, strength)
 
     return {
-        "message": "Prompt created",
-        "postWay": "get_prompt",
-        "form_data": {
-            "prompt": prompt,
-            "negative_prompt": negative_prompt,
-            "steps": steps,
-            "num_samples": num_samples,
-            "scale": scale,
-            "seed": seed,
-            "strength": strength,
-            "input_image": input_image,
-            "depth_image": depth_image
-        }
+        "message": "Image created",
+        "image": image.tolist(),
     }
 
 @app.post("/get-promptB")
 async def get_promptB(request: Request):
-    pprint.pprint(vars(request))
     form_data = await request.form()
-    pprint.pprint(form_data)
     prompt = form_data.get('prompt')
     negative_prompt = form_data.get('negative_prompt')
     steps = form_data.get('steps')
@@ -106,15 +86,6 @@ async def get_promptB(request: Request):
     strength = form_data.get('strength')
     input_image = form_data.get('input_image')
     depth_image = form_data.get('depth_image')
-    pprint.pprint(prompt)
-    pprint.pprint(negative_prompt)
-    pprint.pprint(steps)
-    pprint.pprint(num_samples)
-    pprint.pprint(scale)
-    pprint.pprint(seed)
-    pprint.pprint(strength)
-    pprint.pprint(input_image)
-    pprint.pprint(depth_image)
 
     return {
         "message": "Prompt created",
@@ -146,15 +117,6 @@ async def get_promptC(request: Request):
     strength = form_data.get('strength')
     input_image = form_data.get('input_image')
     depth_image = form_data.get('depth_image')
-    pprint.pprint(prompt)
-    pprint.pprint(negative_prompt)
-    pprint.pprint(steps)
-    pprint.pprint(num_samples)
-    pprint.pprint(scale)
-    pprint.pprint(seed)
-    pprint.pprint(strength)
-    pprint.pprint(input_image)
-    pprint.pprint(depth_image)
 
     return {
         "message": "Prompt created",
